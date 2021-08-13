@@ -1,0 +1,20 @@
+@mixin input-response($color){
+    color: $color;
+    font-weight: bold;
+    font-size: 1rem;
+    font-style: italic;
+  }
+  
+  @mixin basic-button{
+    width: 2rem;
+    height: 2rem;
+    border-radius: 15%;
+    background-size: cover;
+  }
+  
+  @mixin flexcard($number){
+    flex: $number;
+    max-width: $number;
+    position: relative;
+    padding-bottom: 5rem;
+  }
