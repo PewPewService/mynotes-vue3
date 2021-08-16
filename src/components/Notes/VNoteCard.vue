@@ -6,6 +6,7 @@
       <span class="card-title h5 fw-bold"> {{Note.name}} </span>
 
       <VImageCarousel
+          class="mt-1 mb-1"
           :Id="Note.id"
           :Images="Note.images"
           :Delete="false"
@@ -42,14 +43,6 @@
           title="delete"
           @click="DeleteNote"
         />
-        <!-- <button
-          :id="Note.id"
-          class="btn btn-secondary note__management-buttons__button note__management-buttons__button_delete"
-          title="delete"
-          data-bs-toggle="modal"
-          data-bs-target="#exampleModal"
-          :data-bs-id="Note.id"
-        /> -->
       </div>
 
       <div

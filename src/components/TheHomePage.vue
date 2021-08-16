@@ -1,21 +1,5 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-
-<!-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div @change="test" class="modal-content">
-      <div class="modal-body">
-        Are you sure you want to delete this note?
-      </div>
-      <div class="modal-footer mx-auto">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Yes!</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Nope</button>
-      </div>
-    </div>
-  </div>
-</div> -->
-
-
   <div>
     <transition
       enter-active-class="fadeIn"
@@ -38,7 +22,11 @@
       v-if="!(NotesFound || Loading)"
       class="mt-3 mx-auto"
     > Wow, such empty </div>
-    <div class="spinner-border text-primary" role="status" v-if="!(NotesFound || Loading)"/>
+    <div
+      class="spinner-border text-primary"
+      role="status"
+      v-if="Loading"
+    />
   </div>
 </template>
 

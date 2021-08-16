@@ -22,34 +22,40 @@
 
 <script>
 /* eslint-disable prettier/prettier */
-/* eslint-disable vue/no-mutating-props */
 export default {
     name: "TheTagInput",
     props: {
         Tags: Array
     },
+
     methods: {
         addTag(event) {
             event.preventDefault();
             let tag = event.target.value.trim();
             if (tag && this.Tags.indexOf(tag) == -1) {
-                this.Tags.push(tag);
+                let tags = this.Tags;
+                tags.push(tag);
+                this.$emit("UpdateTags", tags);
                 event.target.value = "";
             }
         },
 
         deleteTag(index) {
-            this.Tags.splice(index, 1);
+            let tags = this.Tags;
+            tags.splice(index, 1);
+            this.$emit("UpdateTags", tags);
         },
 
         popTag(event) {
             let tag = event.target.value.trim();
             if (!tag && this.Tags.length) {
-            event.preventDefault();
-                this.Tags.pop();
+                event.preventDefault();
+                let tags = this.Tags;
+                tags.pop();
+                this.$emit("UpdateTags", tags);
             }
         }
-    }
+    },
 }
 </script>
 

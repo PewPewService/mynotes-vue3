@@ -3,7 +3,7 @@
     <div
         v-if="Images && Images.length > 0"
         :id="'carousel'+Id"
-        class="w-100 mx-auto carousel slide mb-3"
+        class="w-100 mx-auto carousel"
         data-bs-ride="carousel"
         data-bs-interval="false"
     >
@@ -11,7 +11,7 @@
             <div
                 v-for="(image, index) in Images"
                 :key="index"
-                :class="'carousel-item' + (index == 0 ? ' active' : '')"
+                :class="'carousel-item' + (index == displayedImage ? ' active' : '')"
                 data-bs-interval="false"
             >
                 <img 
@@ -26,7 +26,7 @@
                 >
             </div>
         </div>
-        <button
+        <!--<button
             v-if="Images.length > 1"
             class="carousel-control-prev"
             type="button"
@@ -45,6 +45,31 @@
             type="button"
             :data-bs-target="'#carousel'+Id"
             data-bs-slide="next"
+        >
+            <span
+                class="carousel-control-next-icon"
+                aria-hidden="true"
+            />
+            <span class="visually-hidden">Next</span>
+        </button>-->
+
+        <button
+            v-if="Images.length > 1"
+            class="carousel-control-prev"
+            type="button"
+            @click="NextSlide"
+        >
+            <span
+                class="carousel-control-prev-icon"
+                aria-hidden="true"
+            />
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button 
+            v-if="Images.length > 1"
+            class="carousel-control-next"
+            type="button"
+            @click="PrevSlide"
         >
             <span
                 class="carousel-control-next-icon"
@@ -70,6 +95,12 @@ export default {
         Delete: Boolean
     },
 
+    data() {
+        return {
+            displayedImage: 0
+        }
+    },
+
     computed: {
         ...mapGetters(moduleName,[
             getterTypes.GETTER_CONNECTION_STRING
@@ -91,8 +122,25 @@ export default {
         DeleteImage(index) {
             //if ( await this.ConfirmAction('Are you sure you want to delete this image?') ){
                 this.$emit("DeleteImage", index);
+                if (this.displayedImage >= this.Images.length - 1) this.displayedImage = this.Images.length - 1;
             //}
-        }
+        },
+
+        NextSlide() {
+            if (this.displayedImage >= this.Images.length - 1) {
+                this.displayedImage = 0;
+            } else {
+                this.displayedImage += 1;
+            }
+        },
+
+        PrevSlide() {
+            if (this.displayedImage <= 0) {
+                this.displayedImage = this.Images.length - 1;
+            } else {
+                this.displayedImage -= 1;
+            }
+        },
     }
 }
 </script>
@@ -108,6 +156,6 @@ export default {
     bottom: 1rem;
 }
 .carousel, .slide, .carousel-item{
-    height: 30rem !important;
+    height: 20rem !important;
 }
 </style>

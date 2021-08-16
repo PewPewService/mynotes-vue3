@@ -1,9 +1,10 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
     <div class="p-4">
-        <b-spinner 
+        <div
+            class="spinner-border text-primary"
+            role="status"
             v-if="Loading"
-            class="spinner"
         />
         <div class="w-75 h-75 border shadow mx-auto my-auto p-4">
             <p class="mt-3 w-75 text mx-auto fw-bold h2 mb-5">
@@ -33,6 +34,7 @@
                 <div class="input-group mt-3 w-75 text mx-auto text-left fw-bold">
                     <span>Images:</span>
                     <VImageCarousel
+                        class="mt-2 mb-3"
                         :Images="FoundNote.images"
                         :DeletedImages="deletedImages"
                         :Delete="true"
@@ -49,14 +51,16 @@
                                     ref="NoteImages"
                                     aria-describedby="NoteImages"
                                     accept='image/jpg, image/jpeg, image/png'
-                                    @change="ImageOnload"
                                 >
                         </div>
                     </div>
                 </div>
                 <div class="input-group mt-3 w-75 text mx-auto text-left fw-bold">
                     <span>Tags:</span>
-                    <TheTagInput :Tags="FoundNote.tags" />
+                    <TheTagInput 
+                        :Tags="FoundNote.tags"
+                        @UpdateTags="(tags) => FoundNote.tags = tags"    
+                    />
 
                 </div>
 
@@ -133,15 +137,6 @@ export default {
             let id = this.$route.query.id;
             await this[actionTypes.ACTION_GET_NOTE] (id ? id : 0);
         },
-
-        ImageOnload(e){
-            let name ="";
-            for (let file of this.$refs.NoteImages.files){
-                name += file.name + " ";
-            }
-            let nextSibling = e.target.nextElementSibling;
-            nextSibling.innerText = name;
-        },
         
         async ConfirmAction(message){
             return await this.$bvModal.msgBoxConfirm(message)
@@ -151,9 +146,11 @@ export default {
         },
 
         async DeleteImage(id){
+            console.log(id);
             //if ( await this.ConfirmAction('Are you sure you want to delete this image?') ){
                 this.deletedImages.push(this.FoundNote.images[id]);
                 this.FoundNote.images.splice(id,1);
+                console.log(this.FoundNote.images);
            // }
         },
 
@@ -165,6 +162,7 @@ export default {
             if (this[getterTypes.GETTER_NOTE_RESPONSE_SUCCESS]) {
                 this.$router.push({name: 'Home'});
             }
+            this.Loading = false;
         },
 
         CreateForm(event) {
@@ -216,9 +214,5 @@ export default {
 
 .custom-file-input{
   white-space: nowrap;
-}
-
-.carousel, .carousel-slide{
-    height: 30rem !important;
 }
 </style>

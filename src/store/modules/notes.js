@@ -153,7 +153,9 @@ export default {
             catch (err) {
                 console.log(err);
             }
-            commit(mutationTypes.MUTATION_SET_LOADING, false);
+            finally {    
+                commit(mutationTypes.MUTATION_SET_LOADING, false);
+            }
         },
 
         [actionTypes.ACTION_CLEAR_NOTE] ({commit}){
