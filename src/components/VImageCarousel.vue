@@ -82,7 +82,6 @@
 
 <script>
 /* eslint-disable prettier/prettier */
-import "bootstrap/dist/js/bootstrap.min.js";
 import { mapGetters } from "vuex";
 import { getterTypes, moduleName } from "../store/modules/notes";
 export default {
