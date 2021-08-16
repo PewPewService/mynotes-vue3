@@ -26,32 +26,6 @@
                 >
             </div>
         </div>
-        <!--<button
-            v-if="Images.length > 1"
-            class="carousel-control-prev"
-            type="button"
-            :data-bs-target="'#carousel'+Id"
-            data-bs-slide="prev"
-        >
-            <span
-                class="carousel-control-prev-icon"
-                aria-hidden="true"
-            />
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button 
-            v-if="Images.length > 1"
-            class="carousel-control-next"
-            type="button"
-            :data-bs-target="'#carousel'+Id"
-            data-bs-slide="next"
-        >
-            <span
-                class="carousel-control-next-icon"
-                aria-hidden="true"
-            />
-            <span class="visually-hidden">Next</span>
-        </button>-->
 
         <button
             v-if="Images.length > 1"
@@ -59,11 +33,7 @@
             type="button"
             @click="NextSlide"
         >
-            <span
-                class="carousel-control-prev-icon"
-                aria-hidden="true"
-            />
-            <span class="visually-hidden">Previous</span>
+            <span class="carousel-control-prev-icon"/>
         </button>
         <button 
             v-if="Images.length > 1"
@@ -71,11 +41,7 @@
             type="button"
             @click="PrevSlide"
         >
-            <span
-                class="carousel-control-next-icon"
-                aria-hidden="true"
-            />
-            <span class="visually-hidden">Next</span>
+            <span class="carousel-control-next-icon"/>
         </button>
     </div>
 </template>
