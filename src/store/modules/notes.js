@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import api from "./api";
 import { getCookie } from "../../utils/cookie control/cookie.js";
 const NotesApi = process.env.VUE_APP_NOTES;
@@ -114,7 +113,6 @@ export default {
                 if (noteId){
                     const jwt = getCookie("jwt");
                     const response = await api.post(NotesApi + "getNote/" + noteId, {jwt: jwt});
-                    // const response = await axios.post(process.env.VUE_APP_NOTES_API+"getNote/"+noteId, {jwt: jwt});
                     commit (mutationTypes.MUTATION_FOUND_NOTE, response.data);
                 }
                 else commit(mutationTypes.MUTATION_CLEAR_NOTE);
@@ -176,6 +174,7 @@ export default {
         },
 
         [mutationTypes.MUTATION_FOUND_NOTE] (state, note){
+            if (note.tags === null) note.tags = [];
             state.editing_note = note;
         },
 

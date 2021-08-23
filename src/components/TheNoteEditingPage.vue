@@ -1,4 +1,3 @@
-<!-- eslint-disable prettier/prettier -->
 <template>
     <div class="p-4">
         <div
@@ -70,8 +69,6 @@
                     :value="FoundNote.id ? 'Edit' : 'Add' "
                 >  
             </form>
-
-
             
             <p>
                 <span class="mt-3 mb-5 input_error">
@@ -86,9 +83,8 @@
 </template>
 
 <script>
-/* eslint-disable prettier/prettier */
-import { mapGetters, mapActions } from 'vuex';
-import { actionTypes, getterTypes, moduleName } from '../store/modules/notes';
+import { mapGetters, mapActions } from "vuex";
+import { actionTypes, getterTypes, moduleName } from "../store/modules/notes";
 import TheTagInput from "./TheTagInput.vue";
 import VImageCarousel from "./VImageCarousel.vue";
 
@@ -96,12 +92,12 @@ export default {
     name: "TheNoteEditingPage",
     components: {
         TheTagInput,
-        VImageCarousel
+        VImageCarousel,
     },
 
     data() {
         return {
-            tag: '',
+            tag: "",
             images: [],
             deletedImages: [],
             Loading: false,
@@ -115,14 +111,14 @@ export default {
             getterTypes.GETTER_EDITING_NOTE,
             getterTypes.GETTER_CONNECTION_STRING,
         ]),
-        NoteResponseError(){
+        NoteResponseError() {
             return this[getterTypes.GETTER_NOTE_RESPONSE_ERROR];
         },
-        NoteResponseSuccess(){
+        NoteResponseSuccess() {
             return this[getterTypes.GETTER_NOTE_RESPONSE_SUCCESS];
         },
-        FoundNote(){
-            return this[getterTypes.GETTER_EDITING_NOTE]
+        FoundNote() {
+            return this[getterTypes.GETTER_EDITING_NOTE];
         },
     },
 
@@ -130,37 +126,26 @@ export default {
         ...mapActions(moduleName, [
             actionTypes.ACTION_ADD_NOTE,
             actionTypes.ACTION_GET_NOTE,
-            actionTypes.ACTION_EDIT_NOTE
+            actionTypes.ACTION_EDIT_NOTE,
         ]),
 
-        async setFoundNote(){
+        async setFoundNote() {
             let id = this.$route.query.id;
             await this[actionTypes.ACTION_GET_NOTE] (id ? id : 0);
         },
-        
-        async ConfirmAction(message){
-            return await this.$bvModal.msgBoxConfirm(message)
-            .then(value => {
-                return value;
-            })
-        },
 
         async DeleteImage(id){
-            console.log(id);
-            //if ( await this.ConfirmAction('Are you sure you want to delete this image?') ){
-                this.deletedImages.push(this.FoundNote.images[id]);
-                this.FoundNote.images.splice(id,1);
-                console.log(this.FoundNote.images);
-           // }
+            this.deletedImages.push(this.FoundNote.images[id]);
+            this.FoundNote.images.splice(id,1);
         },
 
-        async AddOrEditNote(form){
+        async AddOrEditNote(form) {
             if (this.FoundNote.id) {
-                await this[actionTypes.ACTION_EDIT_NOTE] (form);
+                await this[actionTypes.ACTION_EDIT_NOTE](form);
             }
-            else await this[actionTypes.ACTION_ADD_NOTE] (form);
+            else await this[actionTypes.ACTION_ADD_NOTE](form);
             if (this[getterTypes.GETTER_NOTE_RESPONSE_SUCCESS]) {
-                this.$router.push({name: 'Home'});
+                this.$router.push({name: "Home"});
             }
             this.Loading = false;
         },
@@ -169,29 +154,29 @@ export default {
             event.preventDefault();
             let images = this.$refs.NoteImages.files;
             let form = new FormData;
-            form.append('id', this.FoundNote.id);
-            form.append('name', this.FoundNote.name);
-            form.append('text', this.FoundNote.text);
+            form.append("id", this.FoundNote.id);
+            form.append("name", this.FoundNote.name);
+            form.append("text", this.FoundNote.text);
             for (let tag of this.FoundNote.tags){
-                form.append('tags', tag); 
+                form.append("tags", tag); 
             }
             for (let image of images) {
-                form.append('images', image);
+                form.append("images", image);
             }
-            if (this.FoundNote.id){
-                form.append('leftImages', this.FoundNote.images);
-                form.append('deletedImages', this.deletedImages);
-                form.append('pinned', this.FoundNote.pinned);
+            if (this.FoundNote.id) {
+                form.append("leftImages", this.FoundNote.images);
+                form.append("deletedImages", this.deletedImages);
+                form.append("pinned", this.FoundNote.pinned);
             }
             this.Loading = true;
             this.AddOrEditNote(form);
         },
-        connectionString(image){
+        connectionString(image) {
             return this[getterTypes.GETTER_CONNECTION_STRING] + image;
         },
     },
     
-    async mounted(){
+    async created() {
         await this.setFoundNote();
     },
 }

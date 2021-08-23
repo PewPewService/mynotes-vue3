@@ -1,6 +1,13 @@
-<!-- eslint-disable prettier/prettier -->
 <template>
-    <div class="w-100 tag-input form-control">
+    <div class="w-100 tag-input">
+        <input
+            type="text"
+            placeholder="Enter a tag"
+            class="form-control tag-input__input"
+            @keydown.space="addTag"
+            @keydown.enter="addTag"
+            @keydown.delete="popTag"
+        >
         <div
             v-for="(tag, index) in Tags"
             :key="index"
@@ -9,23 +16,14 @@
             <span @click="deleteTag(index)">x</span>
             {{ tag }}
         </div>
-        <input
-            type="text"
-            placeholder="Enter a tag"
-            class="tag-input__text"
-            @keydown.space="addTag"
-            @keydown.enter="addTag"
-            @keydown.delete="popTag"
-        >
     </div>
 </template>
 
 <script>
-/* eslint-disable prettier/prettier */
 export default {
     name: "TheTagInput",
     props: {
-        Tags: Array
+        Tags: Array,
     },
 
     methods: {
@@ -60,13 +58,6 @@ export default {
 </script>
 
 <style scoped>
-.tag-input {
-    border: 1px solid #eee;
-    font-size: 0.9em;
-    box-sizing: border-box;
-    padding: 0 10px;
-    cursor: default;
-}
 
 .tag-input__tag {
     height: 30px;
@@ -82,14 +73,5 @@ export default {
 .tag-input__tag > span {
     cursor: pointer;
     opacity: 0.75;
-}
-
-.tag-input__text {
-    float: left;
-    border: none;
-    outline: none;
-    font-size: 0.9em;
-    line-height: 50px;
-    background: none;
 }
 </style>

@@ -1,4 +1,3 @@
-<!-- eslint-disable prettier/prettier -->
 <template>
   <div id="app">
     <div
@@ -15,7 +14,7 @@
         to="/login"
       > 
         <span :hidden="!(JWT == undefined || JWT == '')"> sign in </span>
-        <span :hidden="!JWT">{{USER}}</span>
+        <span :hidden="!JWT">{{ USER }}</span>
       </router-link>
        |
       <span @click="CreateNotePage">
@@ -46,13 +45,12 @@
       </div>
     </div>
     <div class="site-content">
-      <router-view/>
+      <router-view />
     </div>
   </div>
 </template>
 
 <script>
-/* eslint-disable prettier/prettier */
 import { moduleName as AuthModule, getterTypes as AuthGetters, actionTypes as AuthActions} from "./store/modules/auth";
 import { moduleName as NotesModule, actionTypes as NotesActions} from "./store/modules/notes";
 import { mapActions, mapGetters } from "vuex";
@@ -62,55 +60,53 @@ export default{
 
   computed: {
     ...mapGetters(AuthModule, [
-        AuthGetters.GETTER_JWT,
-        AuthGetters.GETTER_USER,    
+      AuthGetters.GETTER_JWT,
+      AuthGetters.GETTER_USER,    
     ]),
-    JWT(){
+    JWT() {
       return this[AuthGetters.GETTER_JWT];
     },
-    USER(){
+    USER() {
       return this[AuthGetters.GETTER_USER];
     }
   },
 
-  created(){
+  created() {
     this[AuthActions.ACTION_CHECK_COOKIE]();
-    if (this.JWT == undefined || this.JWT == '') this.$router.push({name:"Login"});
+    if (this.JWT == undefined || this.JWT == "") this.$router.push({name:"Login"});
   },
 
   methods: {
-    ...mapActions(AuthModule, [
-        AuthActions.ACTION_CHECK_COOKIE
-    ]),
+    ...mapActions(AuthModule, [AuthActions.ACTION_CHECK_COOKIE]),
     ...mapActions(NotesModule, [
-        NotesActions.ACTION_GET_NOTES,
-        NotesActions.ACTION_CLEAR_NOTE,
+      NotesActions.ACTION_GET_NOTES,
+      NotesActions.ACTION_CLEAR_NOTE,
     ]),
 
-    async GetNotes(pinned = false, page = 1){
+    async GetNotes(pinned = false, page = 1) {
       let searchQuery = this.$route.query.search;
       await this[NotesActions.ACTION_GET_NOTES]({
         pinned: pinned,
         page: page - 1,
-        queryString: searchQuery ? searchQuery : ''
+        queryString: searchQuery ? searchQuery : ""
       });
     },
     searchNotes(){
       let Searchable = this.$refs.SearchInput.$el.value;
       let routeName = this.$route.name;
-      this.$router.push({name:"Search", query: {search: Searchable} });
-      if (routeName == "Home" || routeName == "Search"){
+      this.$router.push({ name:"Search", query: {search: Searchable } });
+      if (routeName == "Home" || routeName == "Search") {
         this.GetNotes();
         this.GetNotes(true);
       }
     },
 
-    HomePage(){ 
+    HomePage() { 
       this.GetNotes();
       this.GetNotes(true);
     },
 
-    CreateNotePage(){
+    CreateNotePage() {
       this[NotesActions.ACTION_CLEAR_NOTE]();
     },
   },

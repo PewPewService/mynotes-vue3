@@ -1,9 +1,7 @@
-/* eslint-disable prettier/prettier */
 import api from "./api";
-import {setCookie, delCookie, getCookie} from "../../utils/cookie control/cookie.js";
+import { setCookie, delCookie, getCookie } from "../../utils/cookie control/cookie.js";
 const AuthApi = process.env.VUE_APP_USERS;
 export const moduleName = "authModule";
-
 
 export const actionTypes = {
     ACTION_REGISTER: "ACTION_REGISTER",

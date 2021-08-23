@@ -1,121 +1,126 @@
-html{
-    scroll-behavior: smooth;
+html {
+  scroll-behavior: smooth;
+}
+
+#app {
+  overflow: hidden;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
+
+#nav {
+  padding: 10px;
+  background-color:$global-color;
+  width: 100vw;
+  z-index: 80;
+  position: fixed;
+}
+
+#nav a {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+#nav a.router-link-exact-active {
+  color: #42b983;
+}
+
+.site-content {
+  padding-top: calc(2rem + 60px);
+  z-index: 10;
+}
+
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+.cursor-default {
+  cursor: default !important;
+}
+
+.custom-input {
+  height: 1.5rem !important;
+  width: calc(100% - 2rem) !important;
+}
+
+.custom-input_button {
+  width: 1.5rem !important;
+  background-image: url($search_icon);
+  background-repeat: round;
+  background-color: khaki !important;
+}
+
+.carousel-slide {
+  max-width: 100%;
+  display:none;
+  justify-content: center;
+  align-items: center;
+  vertical-align: middle;
+}
+.carousel-item img {
+  width: auto !important;
+  max-width: 100% !important;
+  height: auto !important;
+  max-height: 100% !important;
+  margin: auto;
+}
+
+.carousel-control-next-icon, .carousel-control-prev-icon {
+  background-color: black;
+  border-radius: 50%;
+  background-size: contain;
+}
+
+.centered {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+}
+
+.transformed {
+  transform: translate(-50%, -50%);
+}
+
+.input_error {
+  @include input-response($global-error);
+}
+
+.input_success {
+  @include input-response($global-color);
+}
+
+.badge {
+    color: blue;
+}
+
+.invisible {
+  display: none;
+}
+
+.active {
+  display: flex !important;
+}
+
+.spinner {
+  color: $global-color;
+}
+
+@media(max-width:699px) {
+  #SearchBar {
+    display: block;
+    width: 90% !important;
   }
-  
-  #app {
-    overflow: hidden;
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
+  .w-75 {
+    width: 100% !important;
   }
-  
-  #nav {
-    padding: 10px;
-    background-color:$global-color;
-    width: 100vw;
-    z-index: 100;
-    position: fixed;
-  }
-  
-  #nav a {
-    font-weight: bold;
-    color: #2c3e50;
-  }
-  
-  #nav a.router-link-exact-active {
-    color: #42b983;
-  }
-  
-  .site-content{
-    padding-top: calc(2rem + 60px);
-    z-index: 10;
-  }
-  
-  .cursor-pointer{
-    cursor: pointer !important;
-  }
-  
-  .cursor-default{
-    cursor: default !important;
-  }
-  
-  .custom-input{
-    height: 1.5rem !important;
-    width: calc(100% - 2rem) !important;
-  }
-  
-  .custom-input_button{
-    width: 1.5rem !important;
-    background-image: url($search_icon);
-    background-repeat: round;
-    background-color: khaki !important;
-  }
-  
-  .carousel-slide{
-    max-width: 100%;
-    display:none;
-    justify-content: center;
-    align-items: center;
+}
+
+@media(min-width:700px) {
+  #SearchBar {
+    display: inline-block;
     vertical-align: middle;
   }
-  .carousel-item img{
-    width: auto !important;
-    max-width: 100% !important;
-    height: auto !important;
-    max-height: 100% !important;
-  }
-  
-  .carousel-control-next-icon, .carousel-control-prev-icon{
-    background-color: black;
-    border-radius: 50%;
-    background-size: contain;
-  }
-
-  .spinner-border {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-  }
-  
-  .input_error{
-    @include input-response($global-error);
-  }
-  
-  .input_success{
-    @include input-response($global-color);
-  }
-
-  .badge{
-      color: blue;
-  }
-  
-  .invisible{
-    display: none;
-  }
-  
-  .active{
-    display: flex !important;
-  }
-  
-  .spinner{
-    color: $global-color;
-  }
-  
-  @media(max-width:699px){
-    #SearchBar{
-      display: block;
-      width: 90% !important;
-    }
-    .w-75{
-      width: 100% !important;
-    }
-  }
-  
-  @media(min-width:700px){
-    #SearchBar{
-      display: inline-block;
-      vertical-align: middle;
-    }
-  }
+}

@@ -3,11 +3,11 @@
 </template>
 
 <script>
-import TheLoginPage from '../components/TheLoginPage.vue'
+import TheLoginPage from "../components/TheLoginPage.vue";
 export default {
-    name: 'LoginPage',
-    components:{
-        TheLoginPage
+    name: "LoginPage",
+    components: {
+        TheLoginPage,
     }
 }
 </script>

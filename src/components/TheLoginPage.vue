@@ -1,4 +1,3 @@
-<!-- eslint-disable prettier/prettier  -->
 <template>
   <div class="w-100 my-auto">
     <div v-if="!JWT">
@@ -38,7 +37,7 @@
                   class="input_error"
                   v-if="!input.valid"
                 >
-                  {{input.error}}
+                  {{ input.error }}
                 </p>
               </div>
               <button class="btn btn-primary w-100" type="submit">
@@ -74,16 +73,15 @@
       "
     >
       Hi, {{ USER }}!
-      <button 
+      <button
         class="btn btn-primary"
         @click="LogOut"
-      >logout</button>
+      > logout </button>
     </div>
   </div>
 </template>
 
 <script>
-/*eslint-disable prettier/prettier */
 import { mapActions, mapGetters } from "vuex";
 import { actionTypes, getterTypes, moduleName } from "../store/modules/auth";
 import { VerifyPasswords } from "../utils/validation/passwords";
@@ -210,10 +208,13 @@ export default {
         VerifyEmail(this.UserInputs.form[1].data);
       this.UserInputs.form[3].valid =
         VerifyPasswords(this.UserInputs.form[2].data, this.UserInputs.form[3].data);
-      if ( this.UserInputs.form[0].valid
-        && this.UserInputs.form[1].valid && this.UserInputs.form[3].valid) {
-          this[actionTypes.ACTION_REGISTER](this.RegisterData);
-        }
+      if (
+        this.UserInputs.form[0].valid &&
+        this.UserInputs.form[1].valid &&
+        this.UserInputs.form[3].valid
+      ) {
+        this[actionTypes.ACTION_REGISTER](this.RegisterData);
+      }
     },
 
     SubmitForm(e) {
