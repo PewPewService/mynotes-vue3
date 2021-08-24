@@ -78,6 +78,11 @@
         @click="LogOut"
       > logout </button>
     </div>
+    <div
+      class="spinner-border text-primary centered"
+      role="status"
+      v-if="Loading"
+    />
   </div>
 </template>
 
@@ -155,6 +160,7 @@ export default {
       getterTypes.GETTER_AUTH_ERROR,
       getterTypes.GETTER_JWT,
       getterTypes.GETTER_USER,
+      getterTypes.GETTER_LOADING,
     ]),
     AuthError() {
       return this[getterTypes.GETTER_AUTH_ERROR];
@@ -177,6 +183,9 @@ export default {
         email: this.RegistrationForm.form[1].data,
         password: this.RegistrationForm.form[2].data,
       };
+    },
+    Loading() {
+      return this[getterTypes.GETTER_LOADING];
     },
   },
 

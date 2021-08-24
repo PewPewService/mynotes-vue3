@@ -15,8 +15,7 @@
       > 
         <span :hidden="!(JWT == undefined || JWT == '')"> sign in </span>
         <span :hidden="!JWT">{{ USER }}</span>
-      </router-link>
-       |
+      </router-link> |
       <span @click="CreateNotePage">
         <router-link
           :hidden="!JWT"
@@ -94,14 +93,14 @@ export default{
     searchNotes(){
       let Searchable = this.$refs.SearchInput.$el.value;
       let routeName = this.$route.name;
-      this.$router.push({ name:"Search", query: {search: Searchable } });
+      this.$router.push({ name: "Search", query: { search: Searchable } });
       if (routeName == "Home" || routeName == "Search") {
         this.GetNotes();
         this.GetNotes(true);
       }
     },
 
-    HomePage() { 
+    HomePage() {
       this.GetNotes();
       this.GetNotes(true);
     },

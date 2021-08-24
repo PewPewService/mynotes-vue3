@@ -9,6 +9,7 @@ export const actionTypes = {
     ACTION_LOGOUT: "ACTION_LOGOUT",
     ACTION_CHECK_COOKIE: "ACTION_CHECK_COOKIE",
     ACTION_CLEAR_RESPONSES: "ACTION_CLEAR_RESPONSES",
+    ACTION_SET_LOADING: "ACTION_SET_LOADING",
 }
 
 export const getterTypes = {
@@ -16,6 +17,7 @@ export const getterTypes = {
     GETTER_AUTH_ERROR: "GETTER_AUTH_ERROR",
     GETTER_JWT: "GETTER_JWT",
     GETTER_USER: "GETTER_USER",
+    GETTER_LOADING: "GETTER_LOADING",
 }
 
 export const mutationTypes = {
@@ -23,6 +25,7 @@ export const mutationTypes = {
     MUTATION_AUTH_SUCCESS: "MUTATION_AUTH_SUCCESS",
     MUTATION_LOGOUT: "MUTATION_JWT",
     MUTATION_CLEAR_RESPONSES: "MUTATION_CLEAR_RESPONSES",
+    MUTATION_SET_LOADING: "MUTATION_SET_LOADING",
 }
 
 export default{
@@ -35,10 +38,12 @@ export default{
         response_error: "",
         jwt: "",
         user: "",
+        loading: false,
     }),
 
     actions: {
-        async [actionTypes.ACTION_LOGIN] ({commit}, userData){
+        async [actionTypes.ACTION_LOGIN]({ commit }, userData) {
+            commit(mutationTypes.MUTATION_SET_LOADING, true);
             commit(mutationTypes.MUTATION_CLEAR_RESPONSES);
             try {
                 const response = await api.post(AuthApi + "login", userData);
@@ -51,12 +56,16 @@ export default{
                 }
                 else commit(mutationTypes.MUTATION_AUTH_ERROR, response.data);
             }
-            catch (err){
+            catch (err) {
                 commit(mutationTypes.MUTATION_AUTH_ERROR, err);
+            }
+            finally {
+                commit(mutationTypes.MUTATION_SET_LOADING, false);
             }
         },
 
-        async [actionTypes.ACTION_REGISTER] ({commit}, userData){
+        async [actionTypes.ACTION_REGISTER] ({ commit }, userData) {
+            commit(mutationTypes.MUTATION_SET_LOADING, true);
             commit(mutationTypes.MUTATION_CLEAR_RESPONSES);
             try{
                 const response = await api.post(AuthApi + "register", userData);
@@ -67,10 +76,13 @@ export default{
                     setCookie("user", response.data.user);
                     commit(mutationTypes.MUTATION_AUTH_SUCCESS, response);
                 }
-                else commit (mutationTypes.MUTATION_AUTH_ERROR, response.data);
+                else commit(mutationTypes.MUTATION_AUTH_ERROR, response.data);
             }
-            catch (err){
+            catch (err) {
                 commit(mutationTypes.MUTATION_AUTH_ERROR, err);
+            }
+            finally {
+                commit(mutationTypes.MUTATION_SET_LOADING, false);
             }
         },
 
@@ -80,39 +92,43 @@ export default{
             commit(mutationTypes.MUTATION_LOGOUT);
         },
 
-        [actionTypes.ACTION_CHECK_COOKIE] ({commit}) {
+        [actionTypes.ACTION_CHECK_COOKIE]({ commit }) {
             let jwt = getCookie("jwt");
             let user = getCookie("user");
-            if (jwt && user) commit(mutationTypes.MUTATION_AUTH_SUCCESS, {jwt: jwt, user: user});
+            if (jwt && user) commit(mutationTypes.MUTATION_AUTH_SUCCESS, { jwt: jwt, user: user });
             else commit(mutationTypes.MUTATION_LOGOUT);
         },
 
-        [actionTypes.ACTION_CLEAR_RESPONSES] ({commit}){
+        [actionTypes.ACTION_CLEAR_RESPONSES]({ commit }) {
             commit(mutationTypes.MUTATION_CLEAR_RESPONSES);
         },
     },
 
     mutations: {
-        [mutationTypes.MUTATION_AUTH_ERROR] (state, err){
+        [mutationTypes.MUTATION_AUTH_ERROR](state, err) {
             state.response_error = err;
             state.jwt = "";
         },
 
-        [mutationTypes.MUTATION_AUTH_SUCCESS] (state, response) {
+        [mutationTypes.MUTATION_AUTH_SUCCESS](state, response) {
             state.response_success = response;
             state.jwt = getCookie("jwt");
             state.user = getCookie("user");
         },
 
-        [mutationTypes.MUTATION_LOGOUT] (state){
+        [mutationTypes.MUTATION_LOGOUT](state) {
             state.jwt = getCookie("jwt");
             state.user = getCookie("user");
         },
 
-        [mutationTypes.MUTATION_CLEAR_RESPONSES] (state){
+        [mutationTypes.MUTATION_CLEAR_RESPONSES](state) {
             state.response_error = "";
             state.response_success = "";
-        }
+        },
+
+        [mutationTypes.MUTATION_SET_LOADING](state, condition) {
+            state.loading = condition;
+        },
     },
 
     getters: {
@@ -120,5 +136,6 @@ export default{
         [getterTypes.GETTER_AUTH_ERROR]: (state) => state.response_error,
         [getterTypes.GETTER_JWT]: (state) => state.jwt,
         [getterTypes.GETTER_USER]: (state) => state.user,
+        [getterTypes.GETTER_LOADING]: (state) => state.loading,
     }
 }
