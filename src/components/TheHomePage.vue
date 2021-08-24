@@ -37,28 +37,31 @@ import VNotesList from "./Notes/VNotesList.vue";
 
 export default {
   name: "TheHomePage",
-  
+
   watch: {
     $route: function (value, oldValue) {
       if (value.query.search !== oldValue.query.search) this.Refresh();
-      else if (value.query.pinnedPage !== oldValue.query.pinnedPage) this.Refresh(true);
-      else if (value.query.notesPage !== oldValue.query.notesPage) this.Refresh(false);
-    }
+      else {
+        if (value.query.pinnedPage !== oldValue.query.pinnedPage) this.Refresh(true);
+        if (value.query.notesPage !== oldValue.query.notesPage) this.Refresh(false);
+      }
+    },
   },
 
   components: {
     VNotesList,
   },
 
-  data(){
+  data() {
     return {
       PinnedNotesCaption: "PINNED_NOTES",
       OtherNotesCaption: "NOTES",
       Animation: false,
       Message: "",
       PopupClass: "",
-    }
+    };
   },
+
   computed: {
     ...mapGetters(moduleName, [
       getterTypes.GETTER_PINNED_NOTES,
@@ -73,6 +76,7 @@ export default {
     Error() {
       return this[getterTypes.GETTER_NOTE_RESPONSE_ERROR];
     },
+
     Success() {
       return this[getterTypes.GETTER_NOTE_RESPONSE_SUCCESS];
     },
@@ -81,11 +85,11 @@ export default {
       return [
         {
           name: this.PinnedNotesCaption,
-          notes: this[getterTypes.GETTER_PINNED_NOTES]
+          notes: this[getterTypes.GETTER_PINNED_NOTES],
         },
         {
           name: this.OtherNotesCaption,
-          notes: this[getterTypes.GETTER_OTHER_NOTES]
+          notes: this[getterTypes.GETTER_OTHER_NOTES],
         },
       ];
     },
@@ -107,8 +111,8 @@ export default {
   methods: {
     ...mapActions(moduleName, [actionTypes.ACTION_GET_NOTES]),
 
-    PopUpMessage(){
-      if (this.Error.data){
+    PopUpMessage() {
+      if (this.Error.data) {
         this.Message = this.Error.data;
         this.PopupClass = "input_error";
       } else {

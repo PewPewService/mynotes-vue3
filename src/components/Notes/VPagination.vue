@@ -13,7 +13,7 @@
         :disabled="CurrentPage(Notes.name) == 1"
         class="btn pagination__button ms-1 me-1"
         @click="adjustPage(Notes.name)"
-    > {{Pagination.prev}} </button>
+    > {{ Pagination.prev }} </button>
 
     <button
         v-for="n in 5"
