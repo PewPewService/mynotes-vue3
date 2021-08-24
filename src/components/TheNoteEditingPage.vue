@@ -1,7 +1,7 @@
 <template>
     <div class="p-4">
         <div
-            class="spinner-border text-primary"
+            class="spinner-border text-primary centered"
             role="status"
             v-if="Loading"
         />
