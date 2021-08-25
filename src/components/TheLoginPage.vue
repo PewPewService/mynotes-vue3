@@ -87,106 +87,105 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, useStore } from "vuex";
 import { actionTypes, getterTypes, moduleName } from "../store/modules/auth";
 import { VerifyPasswords } from "../utils/validation/passwords";
 import { VerifyEmail } from "../utils/validation/email";
 import { VerifyLength } from "../utils/validation/length";
-export default {
-  data() {
-    return {
-      RegistrationForm: {
-        name: "Registration",
-        form: [
-          {
-            type: "text",
-            placeholder: "Enter your username here",
-            data: "",
-            error: "The length should be between 5 and 30 symbols!",
-            valid: true,
-          },
-          {
-            type: "email",
-            placeholder: "And your email here",
-            data: "",
-            error: "The email is invalid!",
-            valid: true,
-          },
-          {
-            type: "password",
-            placeholder: "Type in your password",
-            data: "",
-            valid: true,
-          },
-          {
-            type: "password",
-            placeholder: "Repeat it here",
-            data: "",
-            error: "Passwords should be identical with length between 5 and 30 symbols!",
-            valid: true,
-          },
-        ],
-        buttonCaption: "REGISTER",
-        switchMessage: "Have an account? Login",
-      },
-      LoginForm: {
-        name: "Login",
-        form: [
-          {
-            type: "text",
-            placeholder: "Enter your username or email here",
-            data: "",
-            valid: true,
-          },
-          {
-            type: "password",
-            placeholder: "And the password here",
-            data: "",
-            valid: true,
-          },
-        ],
-        buttonCaption: "LOGIN",
-        switchMessage: "First time? Register",
-      },
-      UserInputs: {},
-      Animation: true,
-      EnterAnimation: "fadeOutUp",
-      LeaveAnimation: "fadeInDown",
-    };
-  },
+import { computed, defineComponent, ref } from "@vue/runtime-core";
 
-  computed: {
-    ...mapGetters(moduleName, [
-      getterTypes.GETTER_AUTH_ERROR,
-      getterTypes.GETTER_JWT,
-      getterTypes.GETTER_USER,
-      getterTypes.GETTER_LOADING,
-    ]),
-    AuthError() {
-      return this[getterTypes.GETTER_AUTH_ERROR];
-    },
-    JWT() {
-      return this[getterTypes.GETTER_JWT];
-    },
-    USER() {
-      return this[getterTypes.GETTER_USER];
-    },
-    LoginData() {
+export default defineComponent({
+  name: "TheLoginPage",
+  setup() {
+    const RegistrationForm = {
+      name: "Registration",
+      form: [
+        {
+          type: "text",
+          placeholder: "Enter your username here",
+          data: "",
+          error: "The length should be between 5 and 30 symbols!",
+          valid: true,
+        },
+        {
+          type: "email",
+          placeholder: "And your email here",
+          data: "",
+          error: "The email is invalid!",
+          valid: true,
+        },
+        {
+          type: "password",
+          placeholder: "Type in your password",
+          data: "",
+          valid: true,
+        },
+        {
+          type: "password",
+          placeholder: "Repeat it here",
+          data: "",
+          error: "Passwords should be identical with length between 5 and 30 symbols!",
+          valid: "true",
+        },
+      ],
+      buttonCaption: "REGISTER",
+      switchMessage: "Have an account? Login",
+    };
+    const LoginForm = {
+      name: "Login",
+      form: [
+        {
+          type: "text",
+          placeholder: "Enter your username or email here",
+          data: "",
+          valid: true,
+        },
+        {
+          type: "password",
+          placeholder: "And the password here",
+          data: "",
+          valid: true,
+        },
+      ],
+      buttonCaption: "LOGIN",
+      switchMessage: "First time? Register",
+    };
+    const UserInputs = ref({});
+    const Animation = ref(true);
+    const EnterAnimation = ref("fadeOutUp");
+    const LeaveAnimation = ref("fadeInDown");
+
+    const store = useStore();
+    const AuthError = computed(() => store.getters[`${moduleName}/${getterTypes.GETTER_AUTH_ERROR}`]);
+    const JWT = computed(() => store.getters[`${moduleName}/${getterTypes.GETTER_JWT}`]);
+    const USER = computed(() => store.getters[`${moduleName}/${getterTypes.GETTER_USER}`]);
+    const Loading = computed (() => store.getters[`${moduleName}/${getterTypes.GETTER_LOADING}`]);
+    const LoginData = computed(() => {
       return {
-        username: this.LoginForm.form[0].data,
-        password: this.LoginForm.form[1].data,
-      };
-    },
-    RegisterData() {
+      username: LoginForm.form[0].data,
+      password: LoginForm.form[1].data,
+    }});
+    const RegisterData = computed(() => {
       return {
-        username: this.RegistrationForm.form[0].data,
-        email: this.RegistrationForm.form[1].data,
-        password: this.RegistrationForm.form[2].data,
-      };
-    },
-    Loading() {
-      return this[getterTypes.GETTER_LOADING];
-    },
+        username: RegistrationForm.form[0].data,
+        email: RegistrationForm.form[1].data,
+        password: RegistrationForm.form[2].data,
+    }});
+
+    return {
+      RegistrationForm,
+      LoginForm,
+      UserInputs,
+      Animation,
+      EnterAnimation,
+      LeaveAnimation,
+      AuthError,
+      JWT,
+      USER,
+      Loading,
+      LoginData,
+      RegisterData,
+    };
   },
 
   created() {
@@ -257,7 +256,7 @@ export default {
       this.ClearForm();
     },
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>

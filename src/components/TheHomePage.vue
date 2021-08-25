@@ -11,16 +11,16 @@
       > {{ Message }} </div>
     </transition>
     <VNotesList
-      v-for="Notes in Notes"
-      :key="Notes.name"
-      :Notes="Notes"
+      v-for="NotesList in Notes"
+      :key="NotesList.name"
+      :Notes="NotesList"
       @PopUpMessage="PopUpMessage"
       @Refresh="Refresh"
     />
     {{ Success + Error }}
     <div
       v-if="!(NotesFound || Loading)"
-      class="centered transformed h5 fw-bold"
+      class="centered transformed h5 fw-bold cursor-default"
     > Wow, such empty </div>
     <div
       class="spinner-border text-primary centered"
@@ -31,11 +31,12 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { computed, defineComponent, ref } from "@vue/runtime-core";
+import { mapActions, useStore } from "vuex";
 import { moduleName, actionTypes, getterTypes } from "../store/modules/notes";
 import VNotesList from "./Notes/VNotesList.vue";
 
-export default {
+export default defineComponent({
   name: "TheHomePage",
 
   watch: {
@@ -52,60 +53,46 @@ export default {
     VNotesList,
   },
 
-  data() {
-    return {
-      PinnedNotesCaption: "PINNED_NOTES",
-      OtherNotesCaption: "NOTES",
-      Animation: false,
-      Message: "",
-      PopupClass: "",
-    };
-  },
+  setup() {
+    const store = useStore();
+    const PinnedNotesCaption = "PINNED_NOTES";
+    const OtherNotesCaption = "NOTES";
+    const Animation = ref(false);
+    const Message = ref("");
+    const PopupClass = ref("");
 
-  computed: {
-    ...mapGetters(moduleName, [
-      getterTypes.GETTER_PINNED_NOTES,
-      getterTypes.GETTER_OTHER_NOTES,
-      getterTypes.GETTER_PINNED_PAGES_COUNT,
-      getterTypes.GETTER_OTHER_PAGES_COUNT,
-      getterTypes.GETTER_NOTE_RESPONSE_ERROR,
-      getterTypes.GETTER_NOTE_RESPONSE_SUCCESS,
-      getterTypes.GETTER_LOADING,
-    ]),
-
-    Error() {
-      return this[getterTypes.GETTER_NOTE_RESPONSE_ERROR];
-    },
-
-    Success() {
-      return this[getterTypes.GETTER_NOTE_RESPONSE_SUCCESS];
-    },
-
-    Notes() {
-      return [
-        {
-          name: this.PinnedNotesCaption,
-          notes: this[getterTypes.GETTER_PINNED_NOTES],
-        },
-        {
-          name: this.OtherNotesCaption,
-          notes: this[getterTypes.GETTER_OTHER_NOTES],
-        },
-      ];
-    },
-
-    NotesFound() {
-      if (
-        +this[getterTypes.GETTER_PINNED_PAGES_COUNT] +
-        +this[getterTypes.GETTER_OTHER_PAGES_COUNT]
-      )
-        return true;
+    const Error = computed(() => store.getters[`${moduleName}/${getterTypes.GETTER_NOTE_RESPONSE_ERROR}`]);
+    const Success = computed(() => store.getters[`${moduleName}/${getterTypes.GETTER_NOTE_RESPONSE_SUCCESS}`]);
+    const Notes = computed(() => [
+      {
+        name: PinnedNotesCaption,
+        notes: store.getters[`${moduleName}/${getterTypes.GETTER_PINNED_NOTES}`],
+      },
+      {
+        name: OtherNotesCaption,
+        notes: store.getters[`${moduleName}/${getterTypes.GETTER_OTHER_NOTES}`],
+      },
+    ]);
+    const NotesFound = computed(() => {
+      if (+store.getters[`${moduleName}/${getterTypes.GETTER_PINNED_PAGES_COUNT}`] +
+      + +store.getters[`${moduleName}/${getterTypes.GETTER_OTHER_PAGES_COUNT}`]) return true;
       else return false;
-    },
+    });
 
-    Loading() {
-      return this[getterTypes.GETTER_LOADING];
-    }
+    const Loading = computed(() => store.getters[`${moduleName}/${getterTypes.GETTER_LOADING}`]);
+
+    return {
+      PinnedNotesCaption,
+      OtherNotesCaption,
+      Animation,
+      Message,
+      PopupClass,
+      Error,
+      Success,
+      Notes,
+      NotesFound,
+      Loading,
+    };
   },
 
   methods: {
@@ -143,7 +130,7 @@ export default {
       this[actionTypes.ACTION_GET_NOTES]({
         pinned: pinned,
         page: page - 1,
-        queryString: searchQuery ? searchQuery : ""
+        queryString: searchQuery ? searchQuery : "",
       });
     },
   },
@@ -151,7 +138,7 @@ export default {
   created() {
     this.Refresh();
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>

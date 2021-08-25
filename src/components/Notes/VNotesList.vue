@@ -25,7 +25,8 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { computed, defineComponent, ref } from "@vue/runtime-core";
+import { mapActions, useStore } from "vuex";
 import {
   moduleName,
   getterTypes,
@@ -34,7 +35,7 @@ import {
 import VNoteCard from "./VNoteCard.vue";
 import VPagination from "./VPagination.vue";
 
-export default {
+export default defineComponent({
   name: "VNotesList",
   props: {
     Notes: Object,
@@ -43,37 +44,29 @@ export default {
     VNoteCard,
     VPagination,
   },
-  data() {
-    return {
-      PinnedNotesCaption: "PINNED_NOTES",
-      OtherNotesCaption: "NOTES",
-    };
-  },
-  computed: {
-    ...mapGetters(moduleName, [
-      getterTypes.GETTER_PINNED_NOTES,
-      getterTypes.GETTER_OTHER_NOTES,
-      getterTypes.GETTER_PINNED_PAGES_COUNT,
-      getterTypes.GETTER_OTHER_PAGES_COUNT,
-      getterTypes.GETTER_NOTE_RESPONSE_ERROR,
-      getterTypes.GETTER_NOTE_RESPONSE_SUCCESS,
-    ]),
-
-    Error() {
-      return this[getterTypes.GETTER_NOTE_RESPONSE_ERROR];
-    },
-    Success() {
-      return this[getterTypes.GETTER_NOTE_RESPONSE_SUCCESS];
-    },
-
-    NotesFound() {
+  setup() {
+    const store = useStore();
+    const PinnedNotesCaption = ref("PINNED_NOTES");
+    const OtherNotesCaption = ref("NOTES");
+    const NotesFound = computed(() => {
       if (
-        +this[getterTypes.GETTER_PINNED_PAGES_COUNT] +
-        +this[getterTypes.GETTER_OTHER_PAGES_COUNT]
+        +store.getters[`${moduleName}/${getterTypes.GETTER_PINNED_PAGES_COUNT}`] +
+        +store.getters[`${moduleName}/${getterTypes.GETTER_OTHER_PAGES_COUNT}`]
       )
         return true;
       else return false;
-    },
+    });
+
+    const Error = computed(() => store.getters[`${moduleName}/${getterTypes.GETTER_NOTE_RESPONSE_ERROR}`]);
+    const Success = computed(() => store.getters[`${moduleName}/${getterTypes.GETTER_NOTE_RESPONSE_SUCCESS}`]);
+
+    return {
+      PinnedNotesCaption,
+      OtherNotesCaption,
+      NotesFound,
+      Error,
+      Success,
+    };
   },
 
   methods: {
@@ -120,5 +113,5 @@ export default {
       window.scrollBy(0, -(2 * rem.substring(0, rem.length - 2) + 60));
     },
   },
-};
+});
 </script>

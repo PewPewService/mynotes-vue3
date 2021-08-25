@@ -104,8 +104,10 @@ html {
   display: flex !important;
 }
 
-.spinner {
-  color: $global-color;
+.spinner-border {
+  border: 5px solid $global-color;
+  border-right-color: transparent;
+  z-index: 110;
 }
 
 @media(max-width:699px) {

@@ -67,7 +67,7 @@
         <span
           v-for="tag in Note.tags"
           :key="tag"
-          class="note-tag ms-1 me-1"
+          class="note-tag cursor-pointer ms-1 me-1"
           @click="SearchByTag(tag)"
         >
           {{ tag }}
@@ -78,11 +78,12 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
-import { moduleName, actionTypes, getterTypes } from "../../store/modules/notes";
+import { mapActions } from "vuex";
+import { moduleName, actionTypes } from "../../store/modules/notes";
 import VImageCarousel from "../VImageCarousel.vue";
 import VConfirm from "../VConfirm.vue";
-export default {
+import { defineComponent } from "@vue/runtime-core";
+export default defineComponent({
   name: "VNoteCard",
   components: {
     VImageCarousel,
@@ -91,25 +92,12 @@ export default {
   props: {
     Note: Object,
   },
-  computed: {
-    ...mapGetters(moduleName, [getterTypes.GETTER_CONNECTION_STRING]),
-  },
   methods: {
     ...mapActions(moduleName, [
       actionTypes.ACTION_PIN_NOTE,
       actionTypes.ACTION_COPY_NOTE,
       actionTypes.ACTION_DELETE_NOTE,
     ]),
-
-    connectionString(image) {
-      return this[getterTypes.GETTER_CONNECTION_STRING] + image;
-    },
-
-    async ConfirmAction(message) {
-      return await this.$bvModal.msgBoxConfirm(message).then((value) => {
-        return value;
-      });
-    },
 
     async PinNote(event) {
       await this[actionTypes.ACTION_PIN_NOTE](event.target.id);
@@ -146,7 +134,7 @@ export default {
       this.$emit("refresh");
     },
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>
@@ -199,7 +187,6 @@ export default {
   border-radius: 1rem;
   padding: 0 0.2rem 0 0.2rem;
   text-align: right;
-  cursor: pointer;
   &:hover {
     background-color: $global-color;
     color: black;
