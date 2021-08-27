@@ -104,7 +104,7 @@ export default defineComponent({
       });
     },
     searchNotes(this: This) {
-      let Searchable = this.$refs.SearchInput.$el.value;
+      let Searchable = this.$refs.SearchInput.value;
       let routeName = this.$route.name;
       this.$router.push({ name: "Search", query: { search: Searchable } });
       if (routeName == "Home" || routeName == "Search") {
