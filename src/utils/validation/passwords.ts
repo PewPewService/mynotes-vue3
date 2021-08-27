@@ -4,8 +4,11 @@ import { VerifyLength } from "./length";
  * also checks if passwords are identical
  * @param {string} password
  * @param {string} passwordRepeat
- * @returns Boolean
+ * @returns boolean
  */
-export function VerifyPasswords(password, passwordRepeat){
-    return (VerifyLength(password) && password === passwordRepeat);
+export function VerifyPasswords(
+  password: string,
+  passwordRepeat: string
+): boolean {
+  return VerifyLength(password) && password === passwordRepeat;
 }

@@ -8,21 +8,15 @@
       @keydown.enter="addTag"
       @keydown.delete="popTag"
     />
-    <div
-      v-for="(tag, index) in Tags"
-      :key="index"
-      class="tag-input__tag"
-    >
-      <span 
-        @click="deleteTag(index)"
-        class="cursor-pointer"
-      >x</span>
+    <div v-for="(tag, index) in Tags" :key="index" class="tag-input__tag">
+      <span @click="deleteTag(index)" class="cursor-pointer">x</span>
       {{ tag }}
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import This from "../utils/interfaces/this";
 import { defineComponent } from "@vue/runtime-core";
 
 export default defineComponent({
@@ -32,7 +26,7 @@ export default defineComponent({
   },
 
   methods: {
-    addTag(event) {
+    addTag(this: This, event: Record<string, any>) {
       event.preventDefault();
       let tag = event.target.value.trim();
       if (tag && this.Tags.indexOf(tag) == -1) {
@@ -43,13 +37,13 @@ export default defineComponent({
       }
     },
 
-    deleteTag(index) {
-      let tags = this.Tags;
+    deleteTag(index: number) {
+      let tags: any = this.Tags;
       tags.splice(index, 1);
       this.$emit("UpdateTags", tags);
     },
 
-    popTag(event) {
+    popTag(this: This, event: Record<string, any>) {
       let tag = event.target.value.trim();
       if (!tag && this.Tags.length) {
         event.preventDefault();

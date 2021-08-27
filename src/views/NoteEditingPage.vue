@@ -1,13 +1,14 @@
 <template>
-    <TheNoteEditingPage />
+  <TheNoteEditingPage />
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from "@vue/runtime-core";
 import TheNoteEditingPage from "../components/TheNoteEditingPage.vue";
-export default {
-    name: "NoteEditingPage",
-    components: {
-        TheNoteEditingPage,
-    }
-}
+export default defineComponent({
+  name: "NoteEditingPage",
+  components: {
+    TheNoteEditingPage,
+  },
+});
 </script>

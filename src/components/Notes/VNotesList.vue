@@ -24,7 +24,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+/* eslint-disable no-unused-vars */
+import This from "../../utils/interfaces/this";
 import { computed, defineComponent, ref } from "@vue/runtime-core";
 import { mapActions, useStore } from "vuex";
 import {
@@ -50,15 +52,25 @@ export default defineComponent({
     const OtherNotesCaption = ref("NOTES");
     const NotesFound = computed(() => {
       if (
-        +store.getters[`${moduleName}/${getterTypes.GETTER_PINNED_PAGES_COUNT}`] +
+        +store.getters[
+          `${moduleName}/${getterTypes.GETTER_PINNED_PAGES_COUNT}`
+        ] +
         +store.getters[`${moduleName}/${getterTypes.GETTER_OTHER_PAGES_COUNT}`]
       )
         return true;
       else return false;
     });
 
-    const Error = computed(() => store.getters[`${moduleName}/${getterTypes.GETTER_NOTE_RESPONSE_ERROR}`]);
-    const Success = computed(() => store.getters[`${moduleName}/${getterTypes.GETTER_NOTE_RESPONSE_SUCCESS}`]);
+    const Error = computed(
+      () =>
+        store.getters[`${moduleName}/${getterTypes.GETTER_NOTE_RESPONSE_ERROR}`]
+    );
+    const Success = computed(
+      () =>
+        store.getters[
+          `${moduleName}/${getterTypes.GETTER_NOTE_RESPONSE_SUCCESS}`
+        ]
+    );
 
     return {
       PinnedNotesCaption,
@@ -76,24 +88,24 @@ export default defineComponent({
       actionTypes.ACTION_DELETE_NOTE,
     ]),
 
-    CurrentPage(name) {
+    CurrentPage(name: string) {
       let page;
       if (name == this.PinnedNotesCaption) page = this.$route.query.pinnedPage;
       if (name == this.OtherNotesCaption) page = this.$route.query.notesPage;
       return page ? Number(page) : 1;
     },
 
-    PushToRouter(pinnedPage, notesPage) {
-      let query = {};
+    PushToRouter(pinnedPage: number, notesPage: number) {
+      let query: Record<string, unknown> = {};
       let search = this.$route.query.search;
       let name = this.$route.name;
       if (search) query.search = search;
       if (pinnedPage - 1) query.pinnedPage = pinnedPage;
       if (notesPage - 1) query.notesPage = notesPage;
-      this.$router.push({ name: name, query: query });
+      this.$router.push(new Object({ name: name, query: query }));
     },
 
-    CheckEmptyPage() {
+    CheckEmptyPage(this: This) {
       if (
         this.Notes.notes.length == 1 &&
         this.CurrentPage(this.Notes.name) > 1
@@ -107,10 +119,10 @@ export default defineComponent({
       this.$emit("Refresh");
     },
 
-    ScrollToTop(name) {
+    ScrollToTop(this: This, name: string) {
       this.$refs[`${name}`].scrollIntoView();
       const rem = getComputedStyle(document.documentElement).fontSize;
-      window.scrollBy(0, -(2 * rem.substring(0, rem.length - 2) + 60));
+      window.scrollBy(0, -(2 * Number(rem.substring(0, rem.length - 2)) + 60));
     },
   },
 });

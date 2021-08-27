@@ -1,13 +1,14 @@
 <template>
-    <TheHomePage />
+  <TheHomePage />
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from "@vue/runtime-core";
 import TheHomePage from "../components/TheHomePage.vue";
-export default {
-    name: "HomePage",
-    components: {
-        TheHomePage,
-    }
-}
+export default defineComponent({
+  name: "HomePage",
+  components: {
+    TheHomePage,
+  },
+});
 </script>

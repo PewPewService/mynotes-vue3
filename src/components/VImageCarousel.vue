@@ -47,69 +47,13 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+/* eslint-disable no-unused-vars */
+import This from "../utils/interfaces/this";
 import { computed, defineComponent, ref } from "@vue/runtime-core";
 import { useStore } from "vuex";
 import { getterTypes, moduleName } from "../store/modules/notes";
 import VConfirm from "./VConfirm.vue";
-/*export default {
-    name: "VImageCarousel",
-
-    components: {
-        VConfirm,
-    },
-
-    props: {
-        Id: Number,
-        Images: Array,
-        DeletedImages: Array,
-        Delete: Boolean
-    },
-
-    data() {
-        return {
-            displayedImage: 0
-        }
-    },
-
-    computed: {
-        ...mapGetters(moduleName,[
-            getterTypes.GETTER_CONNECTION_STRING
-        ])
-    },
-
-    methods:{
-
-        connectionString(image) {
-            return this[getterTypes.GETTER_CONNECTION_STRING] + image;
-        },
-
-        async DeleteImage(index) {
-            let confirmation = await
-                this.$refs.popup.show("Are you sure you want to delete this image?");
-            if (confirmation) {
-                this.$emit("DeleteImage", index);
-                if (this.displayedImage >= this.Images.length - 1) this.displayedImage = this.Images.length - 1;
-            }
-        },
-
-        NextSlide() {
-            if (this.displayedImage >= this.Images.length - 1) {
-                this.displayedImage = 0;
-            } else {
-                this.displayedImage += 1;
-            }
-        },
-
-        PrevSlide() {
-            if (this.displayedImage <= 0) {
-                this.displayedImage = this.Images.length - 1;
-            } else {
-                this.displayedImage -= 1;
-            }
-        },
-    }
-}*/
 
 export default defineComponent({
   name: "VImageCarousel",
@@ -128,7 +72,10 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const displayedImage = ref(0);
-    const ConnectionString = computed(() => store.getters[`${moduleName}/${getterTypes.GETTER_CONNECTION_STRING}`]);
+    const ConnectionString = computed(
+      () =>
+        store.getters[`${moduleName}/${getterTypes.GETTER_CONNECTION_STRING}`]
+    );
     return {
       displayedImage,
       ConnectionString,
@@ -136,11 +83,11 @@ export default defineComponent({
   },
 
   methods: {
-    ImageConnectionString(image) {
+    ImageConnectionString(image: string) {
       return this.ConnectionString + image;
     },
 
-    async DeleteImage(index) {
+    async DeleteImage(this: This, index: number) {
       let confirmation = await this.$refs.popup.show(
         "Are you sure you want to delete this image?"
       );
@@ -152,7 +99,7 @@ export default defineComponent({
       }
     },
 
-    NextSlide() {
+    NextSlide(this: This) {
       if (this.displayedImage >= this.Images.length - 1) {
         this.displayedImage = 0;
       } else {
@@ -160,7 +107,7 @@ export default defineComponent({
       }
     },
 
-    PrevSlide() {
+    PrevSlide(this: This) {
       if (this.displayedImage <= 0) {
         this.displayedImage = this.Images.length - 1;
       } else {

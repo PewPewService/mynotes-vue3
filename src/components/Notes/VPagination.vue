@@ -8,37 +8,49 @@
       :disabled="CurrentPage(Notes.name) == 1"
       class="btn pagination__button ms-1 me-1"
       @click="goToPage(Notes.name)"
-    > {{ Pagination.start }} </button>
+    >
+      {{ Pagination.start }}
+    </button>
     <button
       :disabled="CurrentPage(Notes.name) == 1"
       class="btn pagination__button ms-1 me-1"
       @click="adjustPage(Notes.name)"
-    > {{ Pagination.prev }} </button>
+    >
+      {{ Pagination.prev }}
+    </button>
 
     <button
       v-for="n in 5"
       :key="n"
       :disabled="n == 3"
-      :hidden="(n-3 + CurrentPage(Notes.name) > PagesCount(Notes.name))
-        || (n-3 + CurrentPage(Notes.name) < 1)"
+      :hidden="
+        n - 3 + CurrentPage(Notes.name) > PagesCount(Notes.name) ||
+        n - 3 + CurrentPage(Notes.name) < 1
+      "
       class="btn pagination__button ms-1 me-1"
-      @click="goToPage(Notes.name, n-3 + CurrentPage(Notes.name))"
-    > {{ n-3 + CurrentPage(Notes.name) }}</button>
+      @click="goToPage(Notes.name, n - 3 + CurrentPage(Notes.name))"
+    >
+      {{ n - 3 + CurrentPage(Notes.name) }}
+    </button>
 
     <button
       :disabled="CurrentPage(Notes.name) == PagesCount(Notes.name)"
       class="btn pagination__button ms-1 me-1"
       @click="adjustPage(Notes.name, 1)"
-    > {{ Pagination.next }} </button>
+    >
+      {{ Pagination.next }}
+    </button>
     <button
       class="btn pagination__button ms-1 me-1"
       :disabled="CurrentPage(Notes.name) == PagesCount(Notes.name)"
       @click="goToPage(Notes.name, PagesCount(Notes.name))"
-    > {{ Pagination.end }} </button>
+    >
+      {{ Pagination.end }}
+    </button>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, defineComponent, ref } from "@vue/runtime-core";
 import { useStore } from "vuex";
 import { moduleName, getterTypes } from "../../store/modules/notes";
@@ -59,8 +71,14 @@ export default defineComponent({
       next: "❱",
       end: "⟫",
     });
-    const pinnedPagesCount = computed(() => store.getters[`${moduleName}/${getterTypes.GETTER_PINNED_PAGES_COUNT}`]);
-    const notesPagesCount = computed(() => store.getters[`${moduleName}/${getterTypes.GETTER_OTHER_PAGES_COUNT}`]);
+    const pinnedPagesCount = computed(
+      () =>
+        store.getters[`${moduleName}/${getterTypes.GETTER_PINNED_PAGES_COUNT}`]
+    );
+    const notesPagesCount = computed(
+      () =>
+        store.getters[`${moduleName}/${getterTypes.GETTER_OTHER_PAGES_COUNT}`]
+    );
 
     return {
       PinnedNotesCaption,
@@ -72,22 +90,26 @@ export default defineComponent({
   },
 
   methods: {
-    PagesCount(name) {
+    PagesCount(name: string) {
       if (name == this.PinnedNotesCaption) return Number(this.pinnedPagesCount);
       if (name == this.OtherNotesCaption) return Number(this.notesPagesCount);
       return null;
     },
 
-    CurrentPage(name) {
+    CurrentPage(name: string) {
       let page;
       if (name == this.PinnedNotesCaption) page = this.$route.query.pinnedPage;
       if (name == this.OtherNotesCaption) page = this.$route.query.notesPage;
       return page ? Number(page) : 1;
     },
 
-    async adjustPage(name, direction = -1) {
-      let pinnedPage = this.$route.query.pinnedPage ? this.$route.query.pinnedPage : 1;
-      let notesPage = this.$route.query.notesPage ? this.$route.query.notesPage : 1;
+    async adjustPage(name: string, direction: number = -1) {
+      let pinnedPage: number = this.$route.query.pinnedPage
+        ? Number(this.$route.query.pinnedPage)
+        : 1;
+      let notesPage: number = this.$route.query.notesPage
+        ? Number(this.$route.query.notesPage)
+        : 1;
       let pinned;
       if (name == this.PinnedNotesCaption) {
         pinnedPage += direction;
@@ -102,9 +124,13 @@ export default defineComponent({
       this.$emit("ScrollToTop", name);
     },
 
-    async goToPage(name, page = 1) {
-      let pinnedPage = this.$route.query.pinnedPage ? this.$route.query.pinnedPage : 1;
-      let notesPage = this.$route.query.notesPage ? this.$route.query.notesPage : 1;
+    async goToPage(name: string, page: number = 1) {
+      let pinnedPage = this.$route.query.pinnedPage
+        ? this.$route.query.pinnedPage
+        : 1;
+      let notesPage = this.$route.query.notesPage
+        ? this.$route.query.notesPage
+        : 1;
       let pinned;
       if (name == this.PinnedNotesCaption) {
         pinnedPage = page;

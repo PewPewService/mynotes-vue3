@@ -77,7 +77,8 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import This from "../../utils/interfaces/this";
 import { mapActions } from "vuex";
 import { moduleName, actionTypes } from "../../store/modules/notes";
 import VImageCarousel from "../VImageCarousel.vue";
@@ -99,26 +100,26 @@ export default defineComponent({
       actionTypes.ACTION_DELETE_NOTE,
     ]),
 
-    async PinNote(event) {
+    async PinNote(this: This, event: Record<string, any>) {
       await this[actionTypes.ACTION_PIN_NOTE](event.target.id);
       this.$emit("PopUpMessage");
       this.$emit("CheckEmptyPage");
     },
 
-    EditNote(event) {
+    EditNote(event: Record<string, any>) {
       this.$router.push({
         name: "NoteEditing",
         query: { id: event.target.id },
       });
     },
 
-    async CopyNote(event) {
+    async CopyNote(this: This, event: Record<string, any>) {
       await this[actionTypes.ACTION_COPY_NOTE](event.target.id);
       this.$emit("PopUpMessage");
       this.$emit("refresh");
     },
 
-    async DeleteNote(event) {
+    async DeleteNote(this: This, event: Record<string, any>) {
       let confirmation = await this.$refs.popup.show(
         "Are you sure you want to delete this note?"
       );
@@ -129,7 +130,7 @@ export default defineComponent({
       }
     },
 
-    SearchByTag(tag) {
+    SearchByTag(tag: string) {
       this.$router.push({ name: "Search", query: { search: tag } });
       this.$emit("refresh");
     },

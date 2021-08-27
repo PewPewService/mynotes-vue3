@@ -56,7 +56,7 @@
         </div>
         <div class="input-group mt-3 w-75 text mx-auto text-left fw-bold">
           <span>Tags:</span>
-          <TheTagInput 
+          <TheTagInput
             :Tags="FoundNote.tags"
             @UpdateTags="(tags) => (FoundNote.tags = tags)"
           />
@@ -81,7 +81,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+/* eslint-disable no-unused-vars */
+import This from "../utils/interfaces/this";
 import { computed, defineComponent, ref } from "@vue/runtime-core";
 import { mapActions, useStore } from "vuex";
 import { actionTypes, getterTypes, moduleName } from "../store/modules/notes";
@@ -102,9 +104,19 @@ export default defineComponent({
     const deletedImages = ref([]);
     const loading = ref(false);
 
-    const NoteResponseError = computed(() => store.getters[`${moduleName}/${getterTypes.GETTER_NOTE_RESPONSE_ERROR}`]);
-    const NoteResponseSuccess = computed(() => store.getters[`${moduleName}/${getterTypes.GETTER_NOTE_RESPONSE_SUCCESS}`]);
-    const FoundNote = computed(() => store.getters[`${moduleName}/${getterTypes.GETTER_EDITING_NOTE}`]);
+    const NoteResponseError = computed(
+      () =>
+        store.getters[`${moduleName}/${getterTypes.GETTER_NOTE_RESPONSE_ERROR}`]
+    );
+    const NoteResponseSuccess = computed(
+      () =>
+        store.getters[
+          `${moduleName}/${getterTypes.GETTER_NOTE_RESPONSE_SUCCESS}`
+        ]
+    );
+    const FoundNote = computed(
+      () => store.getters[`${moduleName}/${getterTypes.GETTER_EDITING_NOTE}`]
+    );
 
     return {
       tag,
@@ -124,17 +136,17 @@ export default defineComponent({
       actionTypes.ACTION_EDIT_NOTE,
     ]),
 
-    async setFoundNote() {
+    async setFoundNote(this: This) {
       let id = this.$route.query.id;
       await this[actionTypes.ACTION_GET_NOTE](id ? id : 0);
     },
 
-    async DeleteImage(id) {
+    async DeleteImage(this: This, id: number) {
       this.deletedImages.push(this.FoundNote.images[id]);
       this.FoundNote.images.splice(id, 1);
     },
 
-    async AddOrEditNote(form) {
+    async AddOrEditNote(this: This, form: FormData) {
       if (this.FoundNote.id) {
         await this[actionTypes.ACTION_EDIT_NOTE](form);
       } else await this[actionTypes.ACTION_ADD_NOTE](form);
@@ -144,7 +156,7 @@ export default defineComponent({
       this.Loading = false;
     },
 
-    CreateForm(event) {
+    CreateForm(this: This, event: Event) {
       event.preventDefault();
       let images = this.$refs.NoteImages.files;
       let form = new FormData();

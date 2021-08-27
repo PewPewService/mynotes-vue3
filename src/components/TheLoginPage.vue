@@ -33,10 +33,7 @@
                   required
                   class="form-control"
                 />
-                <p
-                  class="input_error"
-                  v-if="!input.valid"
-                >
+                <p class="input_error" v-if="!input.valid">
                   {{ input.error }}
                 </p>
               </div>
@@ -73,10 +70,7 @@
       "
     >
       Hi, {{ USER }}!
-      <button
-        class="btn btn-primary"
-        @click="LogOut"
-      > logout </button>
+      <button class="btn btn-primary" @click="LogOut">logout</button>
     </div>
     <div
       class="spinner-border text-primary centered"
@@ -86,7 +80,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+/* eslint-disable no-unused-vars */
+import This from "../utils/interfaces/this";
 import { mapActions, useStore } from "vuex";
 import { actionTypes, getterTypes, moduleName } from "../store/modules/auth";
 import { VerifyPasswords } from "../utils/validation/passwords";
@@ -97,7 +93,7 @@ import { computed, defineComponent, ref } from "@vue/runtime-core";
 export default defineComponent({
   name: "TheLoginPage",
   setup() {
-    const RegistrationForm = {
+    let RegistrationForm = {
       name: "Registration",
       form: [
         {
@@ -124,14 +120,15 @@ export default defineComponent({
           type: "password",
           placeholder: "Repeat it here",
           data: "",
-          error: "Passwords should be identical with length between 5 and 30 symbols!",
+          error:
+            "Passwords should be identical with length between 5 and 30 symbols!",
           valid: "true",
         },
       ],
       buttonCaption: "REGISTER",
       switchMessage: "Have an account? Login",
     };
-    const LoginForm = {
+    let LoginForm = {
       name: "Login",
       form: [
         {
@@ -150,27 +147,24 @@ export default defineComponent({
       buttonCaption: "LOGIN",
       switchMessage: "First time? Register",
     };
-    const UserInputs = ref({});
-    const Animation = ref(true);
-    const EnterAnimation = ref("fadeOutUp");
-    const LeaveAnimation = ref("fadeInDown");
+    let UserInputs = ref({});
+    let Animation = ref(true);
+    let EnterAnimation = ref("fadeOutUp");
+    let LeaveAnimation = ref("fadeInDown");
 
-    const store = useStore();
-    const AuthError = computed(() => store.getters[`${moduleName}/${getterTypes.GETTER_AUTH_ERROR}`]);
-    const JWT = computed(() => store.getters[`${moduleName}/${getterTypes.GETTER_JWT}`]);
-    const USER = computed(() => store.getters[`${moduleName}/${getterTypes.GETTER_USER}`]);
-    const Loading = computed (() => store.getters[`${moduleName}/${getterTypes.GETTER_LOADING}`]);
-    const LoginData = computed(() => {
-      return {
-      username: LoginForm.form[0].data,
-      password: LoginForm.form[1].data,
-    }});
-    const RegisterData = computed(() => {
-      return {
-        username: RegistrationForm.form[0].data,
-        email: RegistrationForm.form[1].data,
-        password: RegistrationForm.form[2].data,
-    }});
+    let store = useStore();
+    let AuthError = computed(
+      () => store.getters[`${moduleName}/${getterTypes.GETTER_AUTH_ERROR}`]
+    );
+    let JWT = computed(
+      () => store.getters[`${moduleName}/${getterTypes.GETTER_JWT}`]
+    );
+    let USER = computed(
+      () => store.getters[`${moduleName}/${getterTypes.GETTER_USER}`]
+    );
+    let Loading = computed(
+      () => store.getters[`${moduleName}/${getterTypes.GETTER_LOADING}`]
+    );
 
     return {
       RegistrationForm,
@@ -183,12 +177,10 @@ export default defineComponent({
       JWT,
       USER,
       Loading,
-      LoginData,
-      RegisterData,
     };
   },
 
-  created() {
+  created(this: This) {
     this.UserInputs = this.LoginForm;
     this[actionTypes.ACTION_CHECK_COOKIE]();
     this[actionTypes.ACTION_CLEAR_RESPONSES]();
@@ -203,36 +195,53 @@ export default defineComponent({
       actionTypes.ACTION_CLEAR_RESPONSES,
     ]),
 
-    ClearForm() {
+    LoginData() {
+      return {
+        username: this.LoginForm.form[0].data,
+        password: this.LoginForm.form[1].data,
+      };
+    },
+
+    RegisterData() {
+      return {
+        username: this.RegistrationForm.form[0].data,
+        email: this.RegistrationForm.form[1].data,
+        password: this.RegistrationForm.form[2].data,
+      };
+    },
+
+    ClearForm(this: This) {
       this[actionTypes.ACTION_CLEAR_RESPONSES]();
       for (let input of this.RegistrationForm.form) input.data = "";
       for (let input of this.LoginForm.form) input.data = "";
     },
 
-    RegisterValidate() {
-      this.UserInputs.form[0].valid =
-        VerifyLength(this.UserInputs.form[0].data)
-      this.UserInputs.form[1].valid =
-        VerifyEmail(this.UserInputs.form[1].data);
-      this.UserInputs.form[3].valid =
-        VerifyPasswords(this.UserInputs.form[2].data, this.UserInputs.form[3].data);
+    RegisterValidate(this: This) {
+      this.UserInputs.form[0].valid = VerifyLength(
+        this.UserInputs.form[0].data
+      );
+      this.UserInputs.form[1].valid = VerifyEmail(this.UserInputs.form[1].data);
+      this.UserInputs.form[3].valid = VerifyPasswords(
+        this.UserInputs.form[2].data,
+        this.UserInputs.form[3].data
+      );
       if (
         this.UserInputs.form[0].valid &&
         this.UserInputs.form[1].valid &&
         this.UserInputs.form[3].valid
       ) {
-        this[actionTypes.ACTION_REGISTER](this.RegisterData);
+        this[actionTypes.ACTION_REGISTER](this.RegisterData());
       }
     },
 
-    SubmitForm(e) {
+    SubmitForm(this: This, e: Event) {
       e.preventDefault();
       if (this.UserInputs.name === this.LoginForm.name) {
-        this[actionTypes.ACTION_LOGIN](this.LoginData);
+        this[actionTypes.ACTION_LOGIN](this.LoginData());
       } else this.RegisterValidate();
     },
 
-    ChangeForm() {
+    ChangeForm(this: This) {
       if (this.UserInputs.name == this.LoginForm.name) {
         this.EnterAnimation = "fadeInDown";
         this.LeaveAnimation = "fadeOutDown";
@@ -251,7 +260,7 @@ export default defineComponent({
       }, 1000);
     },
 
-    LogOut() {
+    LogOut(this: This) {
       this[actionTypes.ACTION_LOGOUT]();
       this.ClearForm();
     },

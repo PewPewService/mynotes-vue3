@@ -1,9 +1,6 @@
 <template>
   <div v-if="visible">
-    <div
-      class="confirm__background"
-      @click="cancel"
-    />
+    <div class="confirm__background" @click="cancel" />
     <div class="centered transformed confirm shadow p-3">
       <span class="confirm__question mx-auto cursor-default">
         {{ question }}
@@ -26,7 +23,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+/* eslint-disable no-unused-vars */
+import This from "../utils/interfaces/this";
 import { ref } from "@vue/reactivity";
 import { defineComponent } from "@vue/runtime-core";
 
@@ -43,7 +42,7 @@ export default defineComponent({
   },
 
   methods: {
-    show(message) {
+    show(this: This, message: string) {
       this.question = message;
       this.visible = true;
       return new Promise((resolve, reject) => {
@@ -52,12 +51,12 @@ export default defineComponent({
       });
     },
 
-    proceed() {
+    proceed(this: This) {
       this.resolvePromise(true);
       this.hide();
     },
 
-    cancel() {
+    cancel(this: This) {
       this.resolvePromise(false);
       this.hide();
     },

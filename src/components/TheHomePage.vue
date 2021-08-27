@@ -1,14 +1,7 @@
 <template>
   <div>
-    <transition
-      enter-active-class="fadeIn"
-      leave-active-class="fadeOut"
-    >
-      <div
-        v-if="Animation"
-        id="popup"
-        :class="PopupClass"
-      > {{ Message }} </div>
+    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
+      <div v-if="Animation" id="popup" :class="PopupClass">{{ Message }}</div>
     </transition>
     <VNotesList
       v-for="NotesList in Notes"
@@ -21,7 +14,9 @@
     <div
       v-if="!(NotesFound || Loading)"
       class="centered transformed h5 fw-bold cursor-default"
-    > Wow, such empty </div>
+    >
+      Wow, such empty
+    </div>
     <div
       class="spinner-border text-primary centered"
       role="status"
@@ -30,7 +25,8 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import This from "../utils/interfaces/this";
 import { computed, defineComponent, ref } from "@vue/runtime-core";
 import { mapActions, useStore } from "vuex";
 import { moduleName, actionTypes, getterTypes } from "../store/modules/notes";
@@ -40,11 +36,13 @@ export default defineComponent({
   name: "TheHomePage",
 
   watch: {
-    $route: function (value, oldValue) {
+    $route: function (this: This, value, oldValue) {
       if (value.query.search !== oldValue.query.search) this.Refresh();
       else {
-        if (value.query.pinnedPage !== oldValue.query.pinnedPage) this.Refresh(true);
-        if (value.query.notesPage !== oldValue.query.notesPage) this.Refresh(false);
+        if (value.query.pinnedPage !== oldValue.query.pinnedPage)
+          this.Refresh(true);
+        if (value.query.notesPage !== oldValue.query.notesPage)
+          this.Refresh(false);
       }
     },
   },
@@ -61,12 +59,21 @@ export default defineComponent({
     const Message = ref("");
     const PopupClass = ref("");
 
-    const Error = computed(() => store.getters[`${moduleName}/${getterTypes.GETTER_NOTE_RESPONSE_ERROR}`]);
-    const Success = computed(() => store.getters[`${moduleName}/${getterTypes.GETTER_NOTE_RESPONSE_SUCCESS}`]);
+    const Error = computed(
+      () =>
+        store.getters[`${moduleName}/${getterTypes.GETTER_NOTE_RESPONSE_ERROR}`]
+    );
+    const Success = computed(
+      () =>
+        store.getters[
+          `${moduleName}/${getterTypes.GETTER_NOTE_RESPONSE_SUCCESS}`
+        ]
+    );
     const Notes = computed(() => [
       {
         name: PinnedNotesCaption,
-        notes: store.getters[`${moduleName}/${getterTypes.GETTER_PINNED_NOTES}`],
+        notes:
+          store.getters[`${moduleName}/${getterTypes.GETTER_PINNED_NOTES}`],
       },
       {
         name: OtherNotesCaption,
@@ -74,12 +81,21 @@ export default defineComponent({
       },
     ]);
     const NotesFound = computed(() => {
-      if (+store.getters[`${moduleName}/${getterTypes.GETTER_PINNED_PAGES_COUNT}`] +
-      + +store.getters[`${moduleName}/${getterTypes.GETTER_OTHER_PAGES_COUNT}`]) return true;
+      if (
+        +store.getters[
+          `${moduleName}/${getterTypes.GETTER_PINNED_PAGES_COUNT}`
+        ] +
+        +(+store.getters[
+          `${moduleName}/${getterTypes.GETTER_OTHER_PAGES_COUNT}`
+        ])
+      )
+        return true;
       else return false;
     });
 
-    const Loading = computed(() => store.getters[`${moduleName}/${getterTypes.GETTER_LOADING}`]);
+    const Loading = computed(
+      () => store.getters[`${moduleName}/${getterTypes.GETTER_LOADING}`]
+    );
 
     return {
       PinnedNotesCaption,
@@ -113,7 +129,7 @@ export default defineComponent({
       }, 2000);
     },
 
-    Refresh(pinned = null) {
+    Refresh(this: This, pinned: boolean | null = null) {
       if (pinned !== null) this.GetNotes(pinned);
       else {
         this.GetNotes(true);
@@ -121,7 +137,7 @@ export default defineComponent({
       }
     },
 
-    GetNotes(pinned = false) {
+    GetNotes(this: This, pinned: boolean = false) {
       let page;
       if (pinned) page = this.$route.query.pinnedPage;
       else page = this.$route.query.notesPage;
