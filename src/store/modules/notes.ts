@@ -1,22 +1,8 @@
 import api from "./api";
-import { getCookie, delCookie } from "../../utils/cookie control/cookie";
-import { AxiosRequestConfig } from "axios";
+import { delCookie } from "../../utils/cookie control/cookie";
 import { Commit } from "vuex";
 const NotesApi: string = process.env.VUE_APP_NOTES;
 export const moduleName: string = "notesModule";
-
-api.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
-    if (
-      Object.getPrototypeOf(new FormData()) ===
-      Object.getPrototypeOf(config.data)
-    ) {
-      config.data.append("jwt", getCookie("myNotesJWT"));
-    } else config.data.jwt = getCookie("myNotesJWT");
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
 
 export const actionTypes: Record<string, string> = {
   ACTION_PIN_NOTE: "ACTION_PIN_NOTE",
@@ -79,7 +65,7 @@ export default {
         note.append("action", "createNote");
         const response = await api.post(NotesApi + "createNote", note);
         commit(mutationTypes.MUTATION_NOTE_RESPONSE_SUCCESS, response);
-      } catch (err) {
+      } catch (err: any) {
         if (err.response.status == 400) commit(mutationTypes.MUTATION_LOGOUT);
         else commit(mutationTypes.MUTATION_NOTE_RESPONSE_ERROR, err);
       }
@@ -93,7 +79,7 @@ export default {
       try {
         const response = await api.post(NotesApi + "pinNote/" + noteId, {});
         commit(mutationTypes.MUTATION_NOTE_RESPONSE_SUCCESS, response);
-      } catch (err) {
+      } catch (err: any) {
         if (err.response.status == 400) commit(mutationTypes.MUTATION_LOGOUT);
         else commit(mutationTypes.MUTATION_NOTE_RESPONSE_ERROR, err);
       }
@@ -110,7 +96,7 @@ export default {
           {}
         );
         commit(mutationTypes.MUTATION_NOTE_RESPONSE_SUCCESS, response);
-      } catch (err) {
+      } catch (err: any) {
         if (err.response.status == 400) commit(mutationTypes.MUTATION_LOGOUT);
         else commit(mutationTypes.MUTATION_NOTE_RESPONSE_ERROR, err);
       }
@@ -124,7 +110,7 @@ export default {
       try {
         const response = await api.post(NotesApi + "deleteNote/" + noteId, {});
         commit(mutationTypes.MUTATION_NOTE_RESPONSE_SUCCESS, response);
-      } catch (err) {
+      } catch (err: any) {
         if (err.response.status == 400) commit(mutationTypes.MUTATION_LOGOUT);
         else commit(mutationTypes.MUTATION_NOTE_RESPONSE_ERROR, err);
       }
@@ -140,7 +126,7 @@ export default {
           const response = await api.post(NotesApi + "getNote/" + noteId, {});
           commit(mutationTypes.MUTATION_FOUND_NOTE, response.data);
         } else commit(mutationTypes.MUTATION_CLEAR_NOTE);
-      } catch (err) {
+      } catch (err: any) {
         if (err.response.status == 400) commit(mutationTypes.MUTATION_LOGOUT);
         else {
           commit(mutationTypes.MUTATION_NOTE_RESPONSE_ERROR, err);
@@ -158,7 +144,7 @@ export default {
         note.append("action", "createNote");
         const response = await api.post(NotesApi + "editNote", note);
         commit(mutationTypes.MUTATION_NOTE_RESPONSE_SUCCESS, response);
-      } catch (err) {
+      } catch (err: any) {
         if (err.response.status == 400) commit(mutationTypes.MUTATION_LOGOUT);
         else commit(mutationTypes.MUTATION_NOTE_RESPONSE_ERROR, err);
       }
@@ -179,7 +165,7 @@ export default {
         if (data.pinned)
           commit(mutationTypes.MUTATION_SET_PINNED_NOTES, notes.data);
         else commit(mutationTypes.MUTATION_SET_OTHER_NOTES, notes.data);
-      } catch (err) {
+      } catch (err: any) {
         if (err.response.status == 400) commit(mutationTypes.MUTATION_LOGOUT);
       } finally {
         commit(mutationTypes.MUTATION_SET_LOADING, false);
@@ -258,7 +244,6 @@ export default {
     },
 
     [mutationTypes.MUTATION_LOGOUT]() {
-      console.log("Invalid token! Logging out");
       delCookie("myNotesJWT");
       delCookie("myNotesUser");
       document.location.reload();

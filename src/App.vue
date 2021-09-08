@@ -73,8 +73,12 @@ export default defineComponent({
 
   setup() {
     const store = useStore();
-    const JWT = computed(() => store.getters[`${AuthModule}/${AuthGetters.GETTER_JWT}`]);
-    const USER = computed(() => store.getters[`${AuthModule}/${AuthGetters.GETTER_USER}`]);
+    const JWT = computed(
+      () => store.getters[`${AuthModule}/${AuthGetters.GETTER_JWT}`]
+    );
+    const USER = computed(
+      () => store.getters[`${AuthModule}/${AuthGetters.GETTER_USER}`]
+    );
 
     return {
       JWT,
@@ -84,8 +88,6 @@ export default defineComponent({
 
   created(this: This) {
     this[AuthActions.ACTION_CHECK_COOKIE]();
-    if (this.JWT == undefined || this.JWT == "")
-      this.$router.push({ name: "Login" });
   },
 
   methods: {

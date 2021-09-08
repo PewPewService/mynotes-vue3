@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-import NotesPage from "../views/NotesPage.vue";
 
 const routes = [
   {
@@ -17,13 +16,13 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: NotesPage,
+    component: () => import("../views/NotesPage.vue"),
   },
 
   {
     path: "/search",
     name: "Search",
-    component: NotesPage,
+    component: () => import("../views/NotesPage.vue"),
   },
 
   {
@@ -36,6 +35,12 @@ const routes = [
     path: "/note/edit",
     name: "NoteEditing",
     component: () => import("../views/NoteEditingPage.vue"),
+  },
+
+  {
+    path: "/passwordReset",
+    name: "PasswordReset",
+    component: () => import("../views/PasswordReset.vue"),
   },
 ];
 

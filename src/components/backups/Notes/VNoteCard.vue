@@ -1,5 +1,5 @@
 <template>
-  <div class="card note flex-card mb-4 mx-auto shadow">
+  <div class="card note flex-card mb-4 mx-auto">
     <div class="card-body">
       <span class="card-title h5 fw-bold"> {{ Note.name }} </span>
 

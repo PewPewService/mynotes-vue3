@@ -89,11 +89,11 @@ html {
 }
 
 .input_success {
-  @include input-response($global-color);
+  @include input-response($global-color-2);
 }
 
 .badge {
-    color: blue;
+    color: blue !important;
 }
 
 .invisible {

@@ -27,12 +27,11 @@
 /* eslint-disable no-unused-vars */
 import This from "../utils/interfaces/this";
 import { ref } from "@vue/reactivity";
-import { defineComponent, provide } from "@vue/runtime-core";
+import { defineComponent } from "@vue/runtime-core";
 
 export default defineComponent({
   name: "VConfirm",
   setup() {
-    provide("test", "test");
     const visible = ref(false);
     const question = ref("");
 

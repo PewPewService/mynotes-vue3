@@ -15,6 +15,8 @@ export const actionTypes: Record<string, string> = {
   ACTION_CHECK_COOKIE: "ACTION_CHECK_COOKIE",
   ACTION_CLEAR_RESPONSES: "ACTION_CLEAR_RESPONSES",
   ACTION_SET_LOADING: "ACTION_SET_LOADING",
+  ACTION_SEND_EMAIL: "ACTION_SEND_EMAIL",
+  ACTION_CHANGE_PASSWORD: "ACTION_CHANGE_PASSWORD",
 };
 
 export const getterTypes: Record<string, string> = {
@@ -26,6 +28,8 @@ export const getterTypes: Record<string, string> = {
 };
 
 export const mutationTypes: Record<string, string> = {
+  MUTATION_RESPONSE_ERROR: "MUTATION_RESPONSE_ERROR",
+  MUTATION_RESPONSE_SUCCESS: "MUTATION_RESPONSE_SUCCESS",
   MUTATION_AUTH_ERROR: "MUTATION_AUTH_ERROR",
   MUTATION_AUTH_SUCCESS: "MUTATION_AUTH_SUCCESS",
   MUTATION_LOGOUT: "MUTATION_LOGOUT",
@@ -55,15 +59,11 @@ export default {
       commit(mutationTypes.MUTATION_CLEAR_RESPONSES);
       try {
         const response = await api.post(AuthApi + "login", userData);
-        delCookie("myNotesJWT");
-        delCookie("myNotesUser");
-        if (response.status == 200) {
-          setCookie("myNotesJWT", response.data.jwt);
-          setCookie("myNotesUser", response.data.user);
-          commit(mutationTypes.MUTATION_AUTH_SUCCESS, response);
-        } else commit(mutationTypes.MUTATION_AUTH_ERROR, response.data);
-      } catch (err) {
-        commit(mutationTypes.MUTATION_AUTH_ERROR, err);
+        setCookie("myNotesJWT", response.data.jwt);
+        setCookie("myNotesUser", response.data.user);
+        commit(mutationTypes.MUTATION_AUTH_SUCCESS, response);
+      } catch (err: any) {
+        commit(mutationTypes.MUTATION_AUTH_ERROR, err.response.data);
       } finally {
         commit(mutationTypes.MUTATION_SET_LOADING, false);
       }
@@ -77,15 +77,11 @@ export default {
       commit(mutationTypes.MUTATION_CLEAR_RESPONSES);
       try {
         const response = await api.post(AuthApi + "register", userData);
-        delCookie("myNotesJWT");
-        delCookie("myNotesUser");
-        if (response.status == 200) {
-          setCookie("myNotesJWT", response.data.jwt);
-          setCookie("myNotesUser", response.data.user);
-          commit(mutationTypes.MUTATION_AUTH_SUCCESS, response);
-        } else commit(mutationTypes.MUTATION_AUTH_ERROR, response.data);
-      } catch (err) {
-        commit(mutationTypes.MUTATION_AUTH_ERROR, err);
+        setCookie("myNotesJWT", response.data.jwt);
+        setCookie("myNotesUser", response.data.user);
+        commit(mutationTypes.MUTATION_AUTH_SUCCESS, response);
+      } catch (err: any) {
+        commit(mutationTypes.MUTATION_AUTH_ERROR, err.response.data);
       } finally {
         commit(mutationTypes.MUTATION_SET_LOADING, false);
       }
@@ -107,6 +103,38 @@ export default {
 
     [actionTypes.ACTION_CLEAR_RESPONSES]({ commit }: Record<string, Commit>) {
       commit(mutationTypes.MUTATION_CLEAR_RESPONSES);
+    },
+
+    async [actionTypes.ACTION_SEND_EMAIL](
+      { commit }: Record<string, Commit>,
+      data: Record<string, string>
+    ) {
+      try {
+        commit(mutationTypes.MUTATION_SET_LOADING, true);
+        commit(mutationTypes.MUTATION_CLEAR_RESPONSES);
+        const response = await api.post(AuthApi + "passwordReset", data);
+        commit(mutationTypes.MUTATION_RESPONSE_SUCCESS, response.data);
+      } catch (err: any) {
+        commit(mutationTypes.MUTATION_RESPONSE_ERROR, err.response.data);
+      } finally {
+        commit(mutationTypes.MUTATION_SET_LOADING, false);
+      }
+    },
+
+    async [actionTypes.ACTION_CHANGE_PASSWORD](
+      { commit }: Record<string, Commit>,
+      data: Record<string, string>
+    ) {
+      try {
+        commit(mutationTypes.MUTATION_SET_LOADING, true);
+        commit(mutationTypes.MUTATION_CLEAR_RESPONSES);
+        const response = await api.post(AuthApi + "changePassword", { data });
+        commit(mutationTypes.MUTATION_RESPONSE_SUCCESS, response.data);
+      } catch (err: any) {
+        commit(mutationTypes.MUTATION_RESPONSE_ERROR, err.response.data);
+      } finally {
+        commit(mutationTypes.MUTATION_SET_LOADING, false);
+      }
     },
   },
 
@@ -130,8 +158,8 @@ export default {
     },
 
     [mutationTypes.MUTATION_LOGOUT](state: Record<string, unknown>) {
-      state.myNotesJWT = getCookie("myNotesJWT");
-      state.myNotesUser = getCookie("myNotesUser");
+      state.myNotesJWT = "";
+      state.myNotesUser = "";
     },
 
     [mutationTypes.MUTATION_CLEAR_RESPONSES](state: Record<string, unknown>) {
@@ -144,6 +172,20 @@ export default {
       condition: Boolean
     ) {
       state.loading = condition;
+    },
+
+    [mutationTypes.MUTATION_RESPONSE_SUCCESS](
+      state: Record<string, unknown>,
+      response: string
+    ) {
+      state.response_success = response;
+    },
+
+    [mutationTypes.MUTATION_RESPONSE_ERROR](
+      state: Record<string, unknown>,
+      response: unknown
+    ) {
+      state.response_error = response;
     },
   },
 
